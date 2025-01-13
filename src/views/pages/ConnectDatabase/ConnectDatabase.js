@@ -132,6 +132,7 @@ const ConnectToDatabase = () => {
     switch (dbType) {
       case 'MySQL':
       case 'PostgreSQL':
+      case 'MariaDB':
         return (
           <>
             <CRow>
@@ -320,6 +321,12 @@ const ConnectToDatabase = () => {
       logo: <img src="/sqllite.svg" alt="SQLite Logo" />,
     },
     {
+      id: 'MariaDB',
+      name: 'MarialDB',
+      color: '#003B57',
+      logo: <img src="/mariadb-icon.svg" alt="SQLite Logo" />,
+    },
+    {
       id: 'MongoDB',
       name: 'MongoDB',
       color: '#47A248',
@@ -489,7 +496,7 @@ const ConnectToDatabase = () => {
                         <strong>Database Path:</strong> {formData.databasePath}
                       </p>
                     )}
-                    {(dbType == 'MySQL' || dbType == 'PostgreSQL') && (
+                    {(dbType == 'MySQL' || dbType == 'PostgreSQL' || dbType == 'MariaDB') && (
                       <>
                         <p>
                           <strong>Host:</strong> {formData.host}

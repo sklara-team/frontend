@@ -15,6 +15,9 @@ import { AppSidebarNav } from './AppSidebarNav'
 
 import { logo } from 'src/assets/brand/logo'
 import { sygnet } from 'src/assets/brand/sygnet'
+// import  brand  from '/logo-website-white.png';
+import brandblue from 'src/assets/brand/logo-website-blue.png'
+import brandwhite from 'src/assets/brand/logo-website-white.png'
 
 // sidebar nav config
 import navigation from '../_nav'
@@ -37,7 +40,8 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <CIcon customClassName="sidebar-brand-full" icon={logo} height={32} />
+          {/* <CIcon customClassName="sidebar-brand-full" icon={brand} height={32} /> */}
+          <img className="sidebar-brand-full" src={brandwhite} height="auto" width="100%" />
           <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} />
         </CSidebarBrand>
         <CCloseButton
