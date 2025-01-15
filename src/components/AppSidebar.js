@@ -30,7 +30,7 @@ const AppSidebar = () => {
   return (
     <CSidebar
       className="border-end"
-      colorScheme="dark"
+      colorScheme="light"
       position="fixed"
       unfoldable={unfoldable}
       visible={sidebarShow}
@@ -39,11 +39,12 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarHeader className="border-bottom">
-        <CSidebarBrand to="/">
-          {/* <CIcon customClassName="sidebar-brand-full" icon={brand} height={32} /> */}
-          <img className="sidebar-brand-full" src={brandwhite} height="auto" width="100%" />
-          <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} />
-        </CSidebarBrand>
+        <img className="sidebar-brand-full" src={brandblue} width="100%" height="40px" />
+        {/* <CSidebarBrand to="/"> */}
+        {/* <CIcon customClassName="sidebar-brand-full" icon={logo} height={32} /> */}
+        {/* <img className="sidebar-brand-full" src={brandwhite} width="90%" height="auto" /> */}
+        {/* <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} /> */}
+        {/* </CSidebarBrand> */}
         <CCloseButton
           className="d-lg-none"
           dark

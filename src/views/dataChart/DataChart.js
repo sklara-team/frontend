@@ -1,77 +1,72 @@
-// import React from 'react';
-// import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import React from 'react'
+import { Bar, Pie, Line } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from 'chart.js'
 
-// const DataChart = ({ data }) => {
-//   if (!data || data.length === 0) return null;
+// Register the required Chart.js modules
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Tooltip,
+  Legend
+)
 
-//   const columns = Object.keys(data[0]);
-//   const numericColumns = columns.filter((col) => typeof data[0][col] === 'number');
-
-//   if (numericColumns.length === 0) return null;
-
-//   return (
-//     <div className="h-96 w-full mt-8">
-//       <ResponsiveContainer width="100%" height="100%">
-//         <LineChart data={data}>
-//           <CartesianGrid strokeDasharray="3 3" />
-//           <XAxis dataKey={columns[0]} />
-//           <YAxis />
-//           <Tooltip />
-//           {numericColumns.map((col, idx) => (
-//             <Line key={idx} type="monotone" dataKey={col} stroke={`hsl(${(idx * 137) % 360}, 70%, 50%)`} />
-//           ))}
-//         </LineChart>
-//       </ResponsiveContainer>
-//     </div>
-//   );
-// };
-
-// export default DataChart;
-
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
-
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
-
-const DataChart = ({ data }) => {
-  // console.log(data);
+const DataChart = ({ data, chartType }) => {
+  if (!data || !chartType) return null
 
   // Validate the input data
-  if (!data || data.length === 0) return null;
+  const columns = Object.keys(data[0]) // Get all keys of the first row
 
-  // Extract columns and filter numeric ones
-  const columns = Object.keys(data[0]);
-  const numericColumns = columns.filter(
-    (col) => typeof data[0][col] === 'number' || !isNaN(Number(data[0][col]))
-  );
-
-  // Identify the first non-numeric field as the label field
+  // Identify non-numeric columns for x-axis and numeric columns for y-axis
   const nonNumericColumns = columns.filter(
     (col) => typeof data[0][col] !== 'number' && isNaN(Number(data[0][col]))
-  );
+  )
+  const numericColumns = columns.filter(
+    (col) => typeof data[0][col] === 'number' || !isNaN(Number(data[0][col]))
+  )
 
-  if (numericColumns.length === 0 || nonNumericColumns.length === 0) return null;
+  if (numericColumns.length === 0 || nonNumericColumns.length === 0) return null
 
-  // Use the first non-numeric column as the labels (name, date, etc.)
-  const labels = data.map((item) => item[nonNumericColumns[0]].trim()); // Take first non-numeric field
+  // Assuming the first non-numeric column is the label field (like product_id or product_category_name)
+  const labels = data.map((item) => item[nonNumericColumns[0]].trim())
 
   const chartData = {
-    labels, // Non-numeric field as labels on the x-axis
+    labels, // Use non-numeric column for the x-axis (labels)
     datasets: numericColumns.map((col, index) => ({
       label: col,
       data: data.map((item) => Number(item[col])), // Convert to number here
-      backgroundColor: `rgba(${75 + index * 40}, 192, 192, 0.6)`,
-      borderColor: `rgba(${75 + index * 40}, 192, 192, 1)`,
-      borderWidth: 1,
+      backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`,
     })),
-  };
+  }
 
-  return (
-    <div className="chart-container">
-      <Bar data={chartData} />
-    </div>
-  );
-};
+  // Render the chart dynamically based on chartType
+  const renderChart = () => {
+    switch (chartType) {
+      case 'bar':
+        return <Bar data={chartData} />
+      case 'pie':
+        return <Pie data={chartData} />
+      case 'line':
+        return <Line data={chartData} />
+      default:
+        return null
+    }
+  }
 
-export default DataChart;
+  return <div className="chart-container">{renderChart()}</div>
+}
+
+export default DataChart

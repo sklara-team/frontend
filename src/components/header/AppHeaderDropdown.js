@@ -82,7 +82,7 @@ const AppHeaderDropdown = () => {
         </CDropdownItem>
         <CDropdownItem onClick={() => navigate('/change-password')}>
           <CIcon icon={cilSettings} className="me-2" />
-          Settings
+          Change Password
         </CDropdownItem>
         {/* <CDropdownItem href="#">
           <CIcon icon={cilCreditCard} className="me-2" />

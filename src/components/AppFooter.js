@@ -13,7 +13,7 @@ const AppFooter = () => {
       <div className="ms-auto">
         <span className="me-1">Powered by</span>
         <a href="https://www.neonflake.com/" target="_blank" rel="noopener noreferrer">
-          NeonFlake Sklara 2024
+          NeonFlake Datepe 2024
         </a>
       </div>
     </CFooter>

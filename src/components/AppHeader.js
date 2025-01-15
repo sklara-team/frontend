@@ -54,7 +54,7 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
             <CNavLink to="/dashboard" as={NavLink}>
-              SKLARA
+              Datape
             </CNavLink>
           </CNavItem>
           {/* <CNavItem>

@@ -1,1 +1,8 @@
 // Here you can add other styles
+.sidebar-nav .nav-title {
+  font-size: 100%;
+}
+:root {
+  --cui-sidebar-nav-link-padding-x: 0.75rem; /* New horizontal padding */
+  --cui-sidebar-nav-link-padding-y: 0.75rem;   /* New vertical padding */
+}
