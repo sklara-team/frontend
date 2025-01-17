@@ -10,7 +10,7 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/connect-database', name: 'ConnectDatabase', element: ConnectToDatabase },
   { path: '/databases', name: 'Database', element: DatabasePage },
-  // { path: '/change-password', name: 'Change Password', element: ChangePassword },
+  { path: '/change-password', name: 'Change Password', element: ChangePassword },
 ]
 
 export default routes
