@@ -5,7 +5,6 @@ import 'core-js'
 import App from './App'
 import store from './store'
 import axios from 'axios'
-
 const setupAxios = () => {
   // axios.defaults.baseURL = 'http://localhost:5000'
   axios.defaults.baseURL = 'https://backend-gby3.onrender.com'
@@ -21,5 +20,5 @@ setupAxios()
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <App />
-  </Provider>
+  </Provider>,
 )
