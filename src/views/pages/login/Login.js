@@ -18,6 +18,7 @@ import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+// import Cookies from 'js-cookie'
 
 const Login = () => {
   const [loading, setLoading] = useState(false)
@@ -116,6 +117,53 @@ const Login = () => {
       Swal.fire('Error!', 'Invalid Credentials', 'error')
     }
   }
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault() // Prevent default form submission
+
+  //   if (!(auth.email && auth.password)) {
+  //     return Swal.fire('Error!', 'All fields are required', 'error')
+  //   }
+
+  //   setLoading(true)
+  //   try {
+  //     const res = await axios.post('/api/users/login', auth, {
+  //       withCredentials: true, // Important for cookies
+  //     })
+
+  //     console.log('Response Headers:', res.headers)
+  //     console.log('JWT from Header:', res.headers['jwt']) // Check if token is present
+
+  //     // Try getting token from headers
+  //     let token = res.headers['jwt']
+
+  //     // If token is not in headers, try getting from cookies
+  //     if (!token) {
+  //       token = Cookies.get('jwt') // Using js-cookie to get token from cookies
+  //       console.log('JWT from Cookies:', token)
+  //     }
+
+  //     if (res.data.success === true) {
+  //       if (token) {
+  //         localStorage.setItem('authToken', token)
+  //       }
+
+  //       navigate('/dashboard')
+  //       setLoading(false)
+
+  //       Swal.fire({
+  //         icon: 'success',
+  //         title: 'Logged in successfully',
+  //         showConfirmButton: false,
+  //         timer: 1500,
+  //         timerProgressBar: true,
+  //       })
+  //     }
+  //   } catch (error) {
+  //     setLoading(false)
+  //     console.error('Login Error:', error)
+  //     Swal.fire('Error!', 'Invalid Credentials', 'error')
+  //   }
+  // }
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
       <CContainer>

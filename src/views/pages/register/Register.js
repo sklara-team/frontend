@@ -17,7 +17,8 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 const Register = () => {
-  const [username, setUsername] = useState('')
+  const [name, setname] = useState('')
+  const [number, setNumber] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -31,22 +32,24 @@ const Register = () => {
 
   const validateFields = () => {
     const newErrors = {}
-    if (!username.trim()) newErrors.username = 'Username is required!'
+    if (!name.trim()) newErrors.name = 'name is required!'
     if (!validEmailRegex.test(email)) newErrors.email = 'Invalid email address!'
     if (!validPasswordRegex.test(password))
       newErrors.password =
         'Password must be 8+ characters, with uppercase, lowercase, digit, and special character.'
     if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match!'
     setErrors(newErrors)
+    if (number.length < 10) newErrors.number = 'Number is required!'
+
     return Object.keys(newErrors).length === 0
   }
 
   const validateField = (field) => {
     let fieldError = ''
     switch (field) {
-      case 'username':
-        if (!username.trim()) fieldError = 'Username is required!'
-        setErrors((prev) => ({ ...prev, username: fieldError }))
+      case 'name':
+        if (!name.trim()) fieldError = 'name is required!'
+        setErrors((prev) => ({ ...prev, name: fieldError }))
         break
       case 'email':
         if (!validEmailRegex.test(email)) fieldError = 'Invalid email address!'
@@ -62,6 +65,10 @@ const Register = () => {
         if (password !== confirmPassword) fieldError = 'Passwords do not match!'
         setErrors((prev) => ({ ...prev, confirmPassword: fieldError }))
         break
+      case 'number':
+        if (!number) fieldError = 'Number is required!'
+        setErrors((prev) => ({ ...prev, number: fieldError }))
+        break
       default:
         break
     }
@@ -71,7 +78,12 @@ const Register = () => {
     e.preventDefault()
     if (!validateFields()) return
     try {
-      const response = await axios.post('/api/users/register', { username, email, password })
+      const response = await axios.post('/api/users/register', {
+        name,
+        email,
+        password,
+        number,
+      })
       if (response.data) {
         Swal.fire({
           icon: 'success',
@@ -102,14 +114,14 @@ const Register = () => {
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      onBlur={() => validateField('username')}
-                      autoComplete="username"
+                      placeholder="name"
+                      value={name}
+                      onChange={(e) => setname(e.target.value)}
+                      onBlur={() => validateField('name')}
+                      autoComplete="name"
                     />
                   </CInputGroup>
-                  {errors.username && <p className="text-danger">{errors.username}</p>}
+                  {errors.name && <p className="text-danger">{errors.name}</p>}
                   <CInputGroup className="mb-3">
                     <CInputGroupText>@</CInputGroupText>
                     <CFormInput
@@ -121,6 +133,19 @@ const Register = () => {
                     />
                   </CInputGroup>
                   {errors.email && <p className="text-danger">{errors.email}</p>}
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilUser} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="Number"
+                      value={number}
+                      onChange={(e) => setNumber(e.target.value)}
+                      onBlur={() => validateField('number')}
+                      autoComplete="number"
+                    />
+                  </CInputGroup>
+                  {errors.number && <p className="text-danger">{errors.number}</p>}
                   <CInputGroup className="mb-3">
                     <CInputGroupText>
                       <CIcon icon={cilLockLocked} />
@@ -197,7 +222,7 @@ export default Register
 // import axios from 'axios'
 
 // const Register = () => {
-//   const [username, setUsername] = useState('')
+//   const [name, setname] = useState('')
 //   const [email, setEmail] = useState('')
 //   const [password, setPassword] = useState('')
 //   const [confirmPassword, setConfirmPassword] = useState('')
@@ -210,7 +235,7 @@ export default Register
 
 //   const validateFields = () => {
 //     const newErrors = {}
-//     if (!username.trim()) newErrors.username = 'Username is required!'
+//     if (!name.trim()) newErrors.name = 'name is required!'
 //     if (!validEmailRegex.test(email)) newErrors.email = 'Invalid email address!'
 //     if (!validPasswordRegex.test(password))
 //       newErrors.password =
@@ -225,7 +250,7 @@ export default Register
 //     if (!validateFields()) return
 //     setLoading(true)
 //     try {
-//       const response = await axios.post('/api/users/register', { username, email, password })
+//       const response = await axios.post('/api/users/register', { name, email, password })
 //       if (response.data.success) {
 //         Swal.fire('Success!', 'Account created successfully!', 'success')
 //         navigate('/login')
@@ -252,13 +277,13 @@ export default Register
 //                       <CIcon icon={cilUser} />
 //                     </CInputGroupText>
 //                     <CFormInput
-//                       placeholder="Username"
-//                       value={username}
-//                       onChange={(e) => setUsername(e.target.value)}
-//                       autoComplete="username"
+//                       placeholder="name"
+//                       value={name}
+//                       onChange={(e) => setname(e.target.value)}
+//                       autoComplete="name"
 //                     />
 //                   </CInputGroup>
-//                   {errors.username && <p className="text-danger text-center">{errors.username}</p>}
+//                   {errors.name && <p className="text-danger text-center">{errors.name}</p>}
 //                   <CInputGroup className="mb-3">
 //                     <CInputGroupText>@</CInputGroupText>
 //                     <CFormInput
