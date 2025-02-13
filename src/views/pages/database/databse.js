@@ -7,7 +7,6 @@
 // import DataChart from '../../dataChart/DataChart'
 
 // const { Sider, Content } = Layout
-// const { TabPane } = Tabs
 // const { TextArea } = Input
 
 // const DatabasePage = () => {
@@ -20,65 +19,63 @@
 //   const [selectedDatabaseName, setSelectedDatabaseName] = useState('')
 //   const [selectedDatabaseType, setSelectedDatabaseType] = useState('')
 //   const [query, setQuery] = useState('')
+//   const [prompt, setPrompt] = useState('')
+//   const [chartType, setChartType] = useState(null)
 //   const [chatHistory, setChatHistory] = useState([])
 //   const [queryHistory, setQueryHistory] = useState([])
-//   const [chartType, setChartType] = useState(null)
 
-//   const toggleSidebar = () => {
-//     setCollapsed(!collapsed)
-//   }
+//   const toggleSidebar = () => setCollapsed(!collapsed)
 
-//   const fetchDatabases = async () => {
-//     try {
-//       const response = await axios.get('/api/databases/all', {
-//         headers: { Authorization: `Bearer ${token}` },
-//       })
-//       if (response.data.success) {
-//         setDatabases(response.data.databases)
+//   useEffect(() => {
+//     const fetchDatabases = async () => {
+//       try {
+//         const response = await axios.get('/api/databases/all', {
+//           headers: { Authorization: `Bearer ${token}` },
+//         })
+//         if (response.data.success) setDatabases(response.data.databases)
+//       } catch (error) {
+//         console.error('Error fetching databases:', error)
 //       }
-//     } catch (error) {
-//       console.error('Error fetching databases:', error)
 //     }
-//   }
 
-//   const fetchSchemaDetails = async (databaseID) => {
-//     try {
-//       const response = await axios.get(`/api/databases/schema-details/${databaseID}`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       })
-//       if (response.data.success) {
-//         setSchemaDetails(response.data.schemaDetails)
-//         // console.log(response.data.schemaDetails)
-//       }
-//     } catch (error) {
-//       console.error('Error fetching schema details:', error)
-//     }
-//   }
+//     fetchDatabases()
+//   }, [token])
 
 //   const handleDatabaseSelect = (databaseID) => {
 //     const selectedDb = databases.find((db) => db._id === databaseID)
 //     setSelectedDatabase(databaseID)
 //     setSelectedDatabaseName(selectedDb.databaseName)
 //     setSelectedDatabaseType(selectedDb.databaseType)
-//     fetchSchemaDetails(databaseID)
-//   }
 
+//     const fetchSchemaDetails = async () => {
+//       try {
+//         const response = await axios.get(`/api/databases/schema-details/${databaseID}`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         })
+//         if (response.data.success) setSchemaDetails(response.data.schemaDetails)
+//       } catch (error) {
+//         console.error('Error fetching schema details:', error)
+//       }
+//     }
+
+//     fetchSchemaDetails()
+//   }
 //   const handleSendChat = async () => {
 //     try {
 //       const response = await axios.post(
 //         `/api/queries/queryAI/${selectedDatabase}`,
-//         { prompt: query },
+//         { prompt },
 //         { headers: { Authorization: `Bearer ${token}` } },
 //       )
+//       console.log('AI', response.data)
 //       if (response.data.success) {
-//         // console.log('AI', response.data.data)
 //         const newChat = {
-//           input: query,
+//           input: prompt,
 //           response: response.data.result,
 //           chartType: response.data.chartType,
 //         }
 //         setChatHistory((prev) => [newChat, ...prev])
-//         setQuery('')
+//         setPrompt('')
 //       }
 //     } catch (error) {
 //       console.error('Error sending chat:', error)
@@ -94,7 +91,11 @@
 //       )
 //       if (response.data.success) {
 //         // console.log(response.data.queryResult)
-//         const newQuery = { input: query, response: response.data.queryResult, chartType }
+//         const newQuery = {
+//           input: query,
+//           response: response.data.queryResult,
+//           chartType: response.data.chartType,
+//         }
 //         setQueryHistory((prev) => [newQuery, ...prev])
 //         setQuery('')
 //       }
@@ -102,11 +103,6 @@
 //       console.error('Error sending query:', error)
 //     }
 //   }
-
-//   useEffect(() => {
-//     fetchDatabases()
-//   }, [])
-
 //   const databaseMenu = (
 //     <Menu>
 //       {databases.map((db) => (
@@ -189,8 +185,8 @@
 //             <TextArea
 //               rows={2}
 //               placeholder="Type your message..."
-//               value={query}
-//               onChange={(e) => setQuery(e.target.value)}
+//               value={prompt}
+//               onChange={(e) => setPrompt(e.target.value)}
 //             />
 //             <Button type="primary" className="my-auto" onClick={handleSendChat}>
 //               Send Chat
@@ -274,16 +270,31 @@
 
 // export default DatabasePage
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Layout, Menu, Dropdown, Button, Tabs, Input, Tree } from 'antd'
 import { MenuUnfoldOutlined, MenuFoldOutlined, PlusOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { isAutheticated } from '../../../auth'
 import DataChart from '../../dataChart/DataChart'
+import TableChart from '../../dataChart/TableChart'
 
 const { Sider, Content } = Layout
 const { TextArea } = Input
+const renderHistory = (history) => {
+  return history.map((item, index) => (
+    <div key={index} style={{ marginBottom: '20px' }}>
+      {item.resultType === 'visualize' ? (
+        <DataChart data={item.response} />
+      ) : (
+        <TableChart data={item.response} />
+      )}
+      <p>
+        <strong>Input:</strong> {item.input}
+      </p>
+    </div>
+  ))
+}
 
 const DatabasePage = () => {
   const navigate = useNavigate()
@@ -301,6 +312,9 @@ const DatabasePage = () => {
   const [queryHistory, setQueryHistory] = useState([])
 
   const toggleSidebar = () => setCollapsed(!collapsed)
+  // Memoizing the history rendering to prevent unnecessary re-renders
+  const chatHistoryMemo = useMemo(() => renderHistory(chatHistory), [chatHistory])
+  const queryHistoryMemo = useMemo(() => renderHistory(queryHistory), [queryHistory])
 
   useEffect(() => {
     const fetchDatabases = async () => {
@@ -347,8 +361,8 @@ const DatabasePage = () => {
       if (response.data.success) {
         const newChat = {
           input: prompt,
-          response: response.data.result,
-          chartType: response.data.chartType,
+          response: response.data.chatHistory,
+          resultType: response.data.chatHistory.resultType,
         }
         setChatHistory((prev) => [newChat, ...prev])
         setPrompt('')
@@ -370,7 +384,6 @@ const DatabasePage = () => {
         const newQuery = {
           input: query,
           response: response.data.queryResult,
-          chartType: response.data.chartType,
         }
         setQueryHistory((prev) => [newQuery, ...prev])
         setQuery('')
@@ -422,18 +435,6 @@ const DatabasePage = () => {
       return {}
     })
   }
-  const renderHistory = (history) => (
-    <>
-      {history.map((item, index) => (
-        <div key={index} style={{ marginBottom: '20px' }}>
-          <DataChart data={item.response} chartType={item.chartType} />
-          <p>
-            <strong>Input:</strong> {item.input}
-          </p>
-        </div>
-      ))}
-    </>
-  )
 
   const tabItems = [
     {
@@ -443,7 +444,7 @@ const DatabasePage = () => {
         <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(80vh - 70px)' }}>
           <div style={{ flex: 1, overflowY: 'auto', marginLeft: '1em' }}>
             {selectedDatabase ? (
-              renderHistory(chatHistory)
+              chatHistoryMemo
             ) : (
               <h3
                 style={{
@@ -478,7 +479,7 @@ const DatabasePage = () => {
         <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(80vh - 70px)' }}>
           <div style={{ flex: 1, overflowY: 'auto', marginLeft: '1rem' }}>
             {selectedDatabase ? (
-              renderHistory(queryHistory)
+              queryHistoryMemo
             ) : (
               <h3
                 style={{
