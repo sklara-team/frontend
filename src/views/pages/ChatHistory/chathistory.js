@@ -22,6 +22,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui
 import './QueryHistoryPage.css'
 import { isAutheticated } from '../../../auth'
 import QueryHistoryModal from './ChatHistoryModal'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const QueryHistoryPage = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -146,6 +148,8 @@ const QueryHistoryPage = () => {
       return
     }
     try {
+      // Show toast message before downloading starts
+      const toastId = toast.info('Downloading PNG...', { autoClose: false })
       const response = await axios.get(`/api/download/chart`, {
         headers: { Authorization: `Bearer ${token}` },
         params: { dataId, objectId },
@@ -159,16 +163,53 @@ const QueryHistoryPage = () => {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+
+      // Update the toast message
+      toast.update(toastId, {
+        render: 'PNG downloaded successfully!',
+        type: 'success',
+        autoClose: 1500,
+      })
     } catch (error) {
       console.error('Error downloading chart', error)
+      toast.error('Failed to download PNG')
     }
   }
+  // const downloadpdf = async (dataId, objectId) => {
+  //   if (!dataId || !objectId) {
+  //     console.error('Invalid dataId or objectId')
+  //     return
+  //   }
+  //   try {
+  //     const response = await axios.get(`/api/download/pdf`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //       params: { dataId, objectId },
+  //       responseType: 'blob',
+  //     })
+
+  //     // Create a download link for the PDF
+  //     const url = window.URL.createObjectURL(new Blob([response.data]))
+  //     const link = document.createElement('a')
+  //     link.href = url
+  //     link.setAttribute('download', 'chart_report.pdf')
+  //     document.body.appendChild(link)
+  //     link.click()
+  //     document.body.removeChild(link)
+  //   } catch (error) {
+  //     console.error('Error downloading PDF:', error)
+  //     alert('Failed to download PDF')
+  //   }
+  // }
   const downloadpdf = async (dataId, objectId) => {
     if (!dataId || !objectId) {
       console.error('Invalid dataId or objectId')
       return
     }
+
     try {
+      // Show toast message before downloading starts
+      const toastId = toast.info('Downloading PDF...', { autoClose: false })
+
       const response = await axios.get(`/api/download/pdf`, {
         headers: { Authorization: `Bearer ${token}` },
         params: { dataId, objectId },
@@ -183,9 +224,16 @@ const QueryHistoryPage = () => {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+
+      // Update the toast message
+      toast.update(toastId, {
+        render: 'PDF downloaded successfully!',
+        type: 'success',
+        autoClose: 1500,
+      })
     } catch (error) {
       console.error('Error downloading PDF:', error)
-      alert('Failed to download PDF')
+      toast.error('Failed to download PDF')
     }
   }
   return (
@@ -195,9 +243,9 @@ const QueryHistoryPage = () => {
           <h1>Query History</h1>
           <p>View and analyze your past queries</p>
         </div>
-        <button className="query-history-export-btn">
-          <Download className="w-4 h-4" />
-          Export History
+        <button className="query-history-sort-btn" onClick={toggleSortOrder}>
+          <ArrowUpDown className="w-4 h-4" />
+          Sort by Date
         </button>
       </div>
 
@@ -236,13 +284,6 @@ const QueryHistoryPage = () => {
       </div>
 
       <Card>
-        <CardHeader className="query-history-card-header">
-          <CardTitle className="query-history-card-title">Recent Queries</CardTitle>
-          <button className="query-history-sort-btn" onClick={toggleSortOrder}>
-            <ArrowUpDown className="w-4 h-4" />
-            Sort by Date
-          </button>
-        </CardHeader>
         <CardContent>
           <div>
             {filteredHistory.length === 0 ? (

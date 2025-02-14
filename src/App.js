@@ -5,6 +5,8 @@ import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
 import './scss/examples.scss'
 import './index.css'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 const Login = React.lazy(() => import('./views/pages/login/Login'))
@@ -33,34 +35,38 @@ const App = () => {
   }, [isColorModeSet, setColorMode, storedTheme])
 
   return (
-    <HashRouter>
-      <Suspense
-        fallback={
-          <div className="pt-3 text-center">
-            <CSpinner color="primary" variant="grow" />
-          </div>
-        }
-      >
-        <Routes>
-          <Route exact path="/login" name="Login Page" element={<Login />} />
-          <Route exact path="/register" name="Register Page" element={<Register />} />
-          <Route exact path="/404" name="Page 404" element={<Page404 />} />
-          <Route exact path="/500" name="Page 500" element={<Page500 />} />
-          <Route
-            exact
-            path="/forget-password"
-            name="Forget password "
-            element={<ForgetPassword />}
-          />
-          {/* <Route path="/" element={<Login />} /> */}
-          {/* <Route exact path="/register" element={<Register />} /> */}
-          {/* <Route path="/404" element={<Page404 />} /> */}
-          {/* <Route path="/500" element={<Page500 />} /> */}
-          <Route path="/*" element={<ProtectedRoute element={DefaultLayout} />} />
-          <Route path="*" name="Home" element={<DefaultLayout />} />
-        </Routes>
-      </Suspense>
-    </HashRouter>
+    <>
+      {/* ToastContainer for global toast notifications */}
+      <ToastContainer position="top-right" autoClose={1500} hideProgressBar={false} />
+      <HashRouter>
+        <Suspense
+          fallback={
+            <div className="pt-3 text-center">
+              <CSpinner color="primary" variant="grow" />
+            </div>
+          }
+        >
+          <Routes>
+            <Route exact path="/login" name="Login Page" element={<Login />} />
+            <Route exact path="/register" name="Register Page" element={<Register />} />
+            <Route exact path="/404" name="Page 404" element={<Page404 />} />
+            <Route exact path="/500" name="Page 500" element={<Page500 />} />
+            <Route
+              exact
+              path="/forget-password"
+              name="Forget password "
+              element={<ForgetPassword />}
+            />
+            {/* <Route path="/" element={<Login />} /> */}
+            {/* <Route exact path="/register" element={<Register />} /> */}
+            {/* <Route path="/404" element={<Page404 />} /> */}
+            {/* <Route path="/500" element={<Page500 />} /> */}
+            <Route path="/*" element={<ProtectedRoute element={DefaultLayout} />} />
+            <Route path="*" name="Home" element={<DefaultLayout />} />
+          </Routes>
+        </Suspense>
+      </HashRouter>
+    </>
   )
 }
 
