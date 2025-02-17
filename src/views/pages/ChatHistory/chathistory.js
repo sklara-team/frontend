@@ -356,10 +356,10 @@ const QueryHistoryPage = () => {
                       <button
                         className="query-history-item-copy-btn"
                         title="View details"
-                        // onClick={() => {
-                        //   setChatid(item?._id)
-                        //   setModalOpen(true)
-                        // }}
+                        onClick={() => {
+                          setChatid(item?._id)
+                         setModalOpen(true)
+                        }}
                       >
                         <ExternalLink className="w-4 h-4" />
                       </button>
