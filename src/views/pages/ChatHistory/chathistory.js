@@ -175,31 +175,7 @@ const QueryHistoryPage = () => {
       toast.error('Failed to download PNG')
     }
   }
-  // const downloadpdf = async (dataId, objectId) => {
-  //   if (!dataId || !objectId) {
-  //     console.error('Invalid dataId or objectId')
-  //     return
-  //   }
-  //   try {
-  //     const response = await axios.get(`/api/download/pdf`, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //       params: { dataId, objectId },
-  //       responseType: 'blob',
-  //     })
-
-  //     // Create a download link for the PDF
-  //     const url = window.URL.createObjectURL(new Blob([response.data]))
-  //     const link = document.createElement('a')
-  //     link.href = url
-  //     link.setAttribute('download', 'chart_report.pdf')
-  //     document.body.appendChild(link)
-  //     link.click()
-  //     document.body.removeChild(link)
-  //   } catch (error) {
-  //     console.error('Error downloading PDF:', error)
-  //     alert('Failed to download PDF')
-  //   }
-  // }
+  
   const downloadpdf = async (dataId, objectId) => {
     if (!dataId || !objectId) {
       console.error('Invalid dataId or objectId')
